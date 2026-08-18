@@ -43,7 +43,7 @@ public class Health extends BarOverlayImpl {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
-    double barWidth = getBarWidth(player);
+    double barWidth = displayedWidth;
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant

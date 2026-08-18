@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2i;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.*;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
@@ -33,6 +34,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     protected final boolean dependenciesMet;
     protected boolean errored;
+
+    // 动画状态：条宽平滑过渡 + 淡入淡出（速度由 transition_speed 配置控制）
+    protected double displayedWidth = -1;
+    protected float displayedAlpha = 1.0f;
 
     protected final BarInfo barInfo;
 
@@ -74,19 +79,27 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     @Override
     public boolean render(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
-        if (shouldRender(player)) {
-            ModUtils.setupOverlayRenderState(true, false);
-            renderBar(gui, graphics, player, vOffset);
-            renderBarDecorations(gui, graphics, player, vOffset);
-            Color.reset(graphics);//don't leak colors
-            if (barSettings.show_text()) {
-                renderText(graphics, player, vOffset);
-            }
-            if (barSettings.show_icon()) {
-                renderIcon(graphics, player, vOffset);
-            }
-            return true;
-        } return false;
+        boolean shouldShow = shouldRender(player);
+        // 淡出动画：即使不应显示，只要透明度未完全归零就继续渲染直至完全消失
+        if (!shouldShow && displayedAlpha <= 0.01f) {
+            return false;
+        }
+        // 每帧更新动画状态（条宽平滑 + 透明度淡入淡出）
+        updateAnimation(player, shouldShow);
+
+        ModUtils.setupOverlayRenderState(true, false);
+        renderBar(gui, graphics, player, vOffset);
+        renderBarDecorations(gui, graphics, player, vOffset);
+        Color.reset(graphics);//don't leak colors
+        if (barSettings.show_text()) {
+            renderText(graphics, player, vOffset);
+        }
+        if (barSettings.show_icon()) {
+            // 图标统一用白色 + 动画透明度
+            Color.WHITE.color2Gl(graphics, displayedAlpha);
+            renderIcon(graphics, player, vOffset);
+        }
+        return true;
     }
 
     public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
@@ -101,7 +114,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int text = (int)barInfo.numerator().getValue(player);
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
-        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , 0).colorToText());
+        int color = barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , 0).colorToText();
+        // 应用淡出透明度到文本颜色
+        int alpha = (int) (((color >>> 24) & 0xFF) * displayedAlpha);
+        color = (alpha << 24) | (color & 0xFFFFFF);
+        textHelper(graphics,xStart,yStart,text,color);
     }
 
     public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
@@ -150,12 +167,14 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderBarBackground(GuiGraphics graphics, Player player,  int vOffset,boolean flash) {
-        double barWidth = getBarWidth(player);
+        double barWidth = displayedWidth;
         int xStart = graphics.guiWidth() / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
         }
         int yStart = graphics.guiHeight() - vOffset;
+        // 背景槽用白色 + 动画透明度
+        Color.WHITE.color2Gl(graphics, displayedAlpha);
 
         if (isFitted()) {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1,flash);
@@ -213,7 +232,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int vOffset,boolean highlight) {
-        int barWidth = getBarWidth(player);
+        int barWidth = (int) Math.ceil(displayedWidth);
         int xStart = getXStartBar(graphics.guiWidth(),barWidth);
         int yStart = graphics.guiHeight() - vOffset;
 
@@ -224,8 +243,30 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
-        color.color2Gl(matrices);
+        color.color2Gl(matrices, displayedAlpha);
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
+    }
+
+    /** 每帧更新条宽平滑过渡与透明度淡入淡出 */
+    private void updateAnimation(Player player, boolean shouldShow) {
+        double target = getBarWidth(player);
+        if (displayedWidth < 0) {
+            displayedWidth = target;
+        } else {
+            displayedWidth += (target - displayedWidth) * animationFactor();
+            if (Math.abs(target - displayedWidth) < 0.1) {
+                displayedWidth = target;
+            }
+        }
+        float targetAlpha = shouldShow ? 1.0f : 0.0f;
+        displayedAlpha += (targetAlpha - displayedAlpha) * (float) animationFactor();
+        if (displayedAlpha < 0.01f) displayedAlpha = 0.0f;
+        if (displayedAlpha > 0.99f) displayedAlpha = 1.0f;
+    }
+
+    /** 动画速度系数：基于 transition_speed 配置（值越大动画越快） */
+    private static double animationFactor() {
+        return 1 - Math.exp(-ClassicBarsConfig.getTransitionSpeed() * 0.1);
     }
 
     public ResourceLocation getIconRL() {

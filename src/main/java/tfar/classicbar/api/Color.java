@@ -57,7 +57,10 @@ public record Color(int a,int r,int g,int b) {
     public void color2Gl(GuiGraphics graphics) {
         graphics.setColor(r / 255f, g / 255f, b / 255f, a / 255f);
     }
-
+    /** 1.21.1 用 GuiGraphics.setColor 着色，可附加透明度乘数（用于淡入淡出动画） */
+    public void color2Gl(GuiGraphics graphics, float alphaMultiplier) {
+        graphics.setColor(r / 255f, g / 255f, b / 255f, a / 255f * alphaMultiplier);
+    }
     public Color withAlpha(float alpha) {
         return fromRGBA(this.r, this.g, this.b, (int) (alpha * 0xff));
     }

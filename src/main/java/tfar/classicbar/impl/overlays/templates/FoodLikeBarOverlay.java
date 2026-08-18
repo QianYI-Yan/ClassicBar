@@ -87,7 +87,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     protected void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
-        double barWidth = BarOverlayImpl.getWidth(thirstLevel, maxLevel);
+        double barWidth = displayedWidth;
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(getPrimaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
@@ -168,6 +168,9 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
         //draw hunger amount
         double hunger = barInfo.numerator().getValue(player);
         int c = getPrimaryBarColor(player).colorToText();
+        // 应用淡出透明度到文本颜色
+        int alpha = (int) (((c >>> 24) & 0xFF) * displayedAlpha);
+        c = (alpha << 24) | (c & 0xFFFFFF);
         textHelper(graphics,xStart,yStart,hunger,c);
     }
 

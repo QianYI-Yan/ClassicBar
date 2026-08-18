@@ -27,7 +27,7 @@ public class StackingBarOverlay extends BarOverlayImpl {
     public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
         //armor toughness stuff
         double value = barInfo.numerator().getValue(player);
-        int barWidth = getBarWidth(player);
+        int barWidth = (int) Math.ceil(displayedWidth);
         int xStart = getXStartBar(graphics.guiWidth(),barWidth);
         int yStart = graphics.guiHeight() - vOffset;
         int index = getStackCount(player);
@@ -72,6 +72,9 @@ public class StackingBarOverlay extends BarOverlayImpl {
         double value = barInfo.numerator().getValue(player);
         int index = getStackCount(player);
         int c = getBarColor(player,index).colorToText();
+        // 应用淡出透明度到文本颜色
+        int alpha = (int) (((c >>> 24) & 0xFF) * displayedAlpha);
+        c = (alpha << 24) | (c & 0xFFFFFF);
         //draw amount
         textHelper(graphics, xStart, yStart, value, c);
     }
