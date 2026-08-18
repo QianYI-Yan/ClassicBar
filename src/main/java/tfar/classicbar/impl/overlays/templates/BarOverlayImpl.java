@@ -26,7 +26,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int BAR_V = 11;
     public static final ResourceLocation BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/icons.png");
+    // 1.21.1 原版已移除 textures/gui/icons.png（改用独立 sprite），
+    // 这里使用模组自带的 1.20.1 版 icons.png，保证各条 UV 坐标正确
+    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/icons.png");
     private final BarSettings barSettings;
 
     protected final boolean dependenciesMet;

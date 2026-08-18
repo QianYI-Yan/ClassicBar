@@ -181,7 +181,7 @@ public class ClothConfigBackend implements ConfigBackend {
                     .setSaveConsumer(value -> settings.addProperty("show_icon", value))
                     .build());
 
-            String icon = getString(settings, "icon", "textures/gui/icons.png");
+            String icon = getString(settings, "icon", "classicbar:textures/gui/icons.png");
             category.addEntry(entryBuilder.startStrField(
                             Component.translatable("classicbar.config.icon"), icon)
                     .setDefaultValue(icon)
