@@ -1,0 +1,23 @@
+{
+  "text.autoconfig.classicbar.title": "Classic Bar 设置",
+  "classicbar.config.category.general": "通用",
+  "classicbar.config.transition_speed": "过渡速度",
+  "classicbar.config.transition_speed.tooltip": "条颜色与预测恢复叠加的过渡动画速度。",
+  "classicbar.config.priority": "优先级",
+  "classicbar.config.priority.tooltip": "各条的渲染顺序（从上到下），可通过列表增删条名。",
+  "classicbar.config.enabled": "启用",
+  "classicbar.config.side": "位置",
+  "classicbar.config.fitted": "自适应宽度",
+  "classicbar.config.show_text": "显示数值",
+  "classicbar.config.show_icon": "显示图标",
+  "classicbar.config.icon": "图标路径",
+  "classicbar.config.color": "颜色",
+  "classicbar.config.color.tooltip": "修改后该条将使用纯色显示；右键重置可恢复默认渐变。",
+  "classicbar.config.bar.health": "生命值",
+  "classicbar.config.bar.mount_health": "坐骑生命值",
+  "classicbar.config.bar.food": "饥饿值",
+  "classicbar.config.bar.air": "氧气",
+  "classicbar.config.bar.armor": "护甲",
+  "classicbar.config.bar.absorption": "吸收",
+  "classicbar.config.bar.armor_toughness": "护甲韧性"
+}

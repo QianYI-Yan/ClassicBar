@@ -1,0 +1,23 @@
+{
+  "text.autoconfig.classicbar.title": "Classic Bar",
+  "classicbar.config.category.general": "General",
+  "classicbar.config.transition_speed": "Transition Speed",
+  "classicbar.config.transition_speed.tooltip": "Animation speed for bar color and predicted healing transitions.",
+  "classicbar.config.priority": "Priority",
+  "classicbar.config.priority.tooltip": "Render order of the bars, from top to bottom. Add/remove bar ids in the list.",
+  "classicbar.config.enabled": "Enabled",
+  "classicbar.config.side": "Side",
+  "classicbar.config.fitted": "Fitted Width",
+  "classicbar.config.show_text": "Show Value",
+  "classicbar.config.show_icon": "Show Icon",
+  "classicbar.config.icon": "Icon Path",
+  "classicbar.config.color": "Color",
+  "classicbar.config.color.tooltip": "Sets this bar to a solid color. Right-click to reset to the default gradient.",
+  "classicbar.config.bar.health": "Health",
+  "classicbar.config.bar.mount_health": "Mount Health",
+  "classicbar.config.bar.food": "Food",
+  "classicbar.config.bar.air": "Air",
+  "classicbar.config.bar.armor": "Armor",
+  "classicbar.config.bar.absorption": "Absorption",
+  "classicbar.config.bar.armor_toughness": "Armor Toughness"
+}

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import java.util.List;
 
 /**
- * 配置后端抽象：支持多个配置库（cloth-config / YACL / 内存默认）。
+ * 配置后端抽象：支持多个配置库（cloth-config / 内存默认）。
  * 通过运行时检测自动选择后端，方便切换测试不同库的 GUI 效果。
  */
 public interface ConfigBackend {

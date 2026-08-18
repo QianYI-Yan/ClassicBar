@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * 内存默认后端：无外部依赖的兜底实现，不提供 GUI。
- * 仅当未安装 cloth-config / YACL 时使用。
+ * 仅当未安装 cloth-config 时使用。
  */
 public class MemoryConfigBackend implements ConfigBackend {
 

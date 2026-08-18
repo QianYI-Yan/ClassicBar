@@ -60,7 +60,6 @@ public class ClassicBarClient implements ClientModInitializer {
                         .then(ClientCommandManager.argument("name", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {
                                     builder.suggest("cloth-config");
-                                    builder.suggest("yacl");
                                     builder.suggest("memory");
                                     return builder.buildFuture();
                                 })

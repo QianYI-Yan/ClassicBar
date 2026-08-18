@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * 配置门面：优先使用手动指定（/classicbar backend 命令）的后端，
- * 否则按运行时检测自动选择（cloth-config > YACL > 内存默认）。
+ * 否则按运行时检测自动选择（cloth-config > 内存默认）。
  * 想切换测试不同配置库时，用命令或放入/移除对应库即可。
  */
 public class ClassicBarsConfig {
@@ -43,22 +43,14 @@ public class ClassicBarsConfig {
             return new ClothConfigBackend();
           }
         }
-        case "yacl" -> {
-          if (FabricLoader.getInstance().isModLoaded("yet_another_config_lib")) {
-            return new YaclConfigBackend();
-          }
-        }
         case "memory" -> {
           return new MemoryConfigBackend();
         }
       }
     }
-    // 自动检测
+    // 自动检测：优先 cloth-config，否则内存默认
     if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
       return new ClothConfigBackend();
-    }
-    if (FabricLoader.getInstance().isModLoaded("yet_another_config_lib")) {
-      return new YaclConfigBackend();
     }
     return new MemoryConfigBackend();
   }

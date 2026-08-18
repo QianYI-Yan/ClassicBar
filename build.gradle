@@ -42,8 +42,6 @@ dependencies {
 
     // 配置库（可选后端，运行时按安装情况自动选择）
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:11.1.136"
-    // YACL 的 maven 已迁移，这里用本地 libs 目录中的 jar（Modrinth 官方发布）
-    modImplementation fileTree(dir: "libs", include: "*.jar")
 
     // modmenu：仅编译期需要（提供配置 GUI 入口），运行时可选的
     modCompileOnly "com.terraformersmc:modmenu:7.1.0"

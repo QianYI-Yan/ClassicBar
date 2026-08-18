@@ -4,6 +4,7 @@
   "version": "${version}",
   "name": "Classic Bar",
   "description": "把 HUD 上的状态图标替换为条形显示。",
+  "icon": "assets/classicbar/icon.png",
   "authors": [
     "Tfarecnim"
   ],
@@ -31,7 +32,6 @@
   },
   "suggests": {
     "cloth-config": "*",
-    "yet_another_config_lib": "*",
     "modmenu": "*"
   }
 }
