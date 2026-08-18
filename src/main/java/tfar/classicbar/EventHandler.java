@@ -125,7 +125,7 @@ public class EventHandler {
   static void tryRead(Gson gson, String name, File file) throws IOException {
     try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
       JsonObject json = gson.fromJson(reader, JsonObject.class);
-      BarOverlay barOverlay = BarRegistry.REGISTRY.get(name).codec().parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
+      BarOverlay barOverlay = BarRegistry.REGISTRY.get(name).codec().parse(new Dynamic<>(JsonOps.INSTANCE, json)).result().orElseThrow();
       registry.add(barOverlay);
     }
   }

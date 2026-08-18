@@ -24,9 +24,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int HEIGHT = 5;
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
-    public static final ResourceLocation BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
+    public static final ResourceLocation BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/icons.png");
     private final BarSettings barSettings;
 
     protected final boolean dependenciesMet;

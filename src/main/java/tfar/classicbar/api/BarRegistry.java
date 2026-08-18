@@ -11,11 +11,11 @@ public class BarRegistry {
     public static final LinkedHashMap<String, BarOverlay> REGISTRY = new LinkedHashMap<>();
 
     // 原版 HUD 元素 ID（记录用途：对应的原版显示会被本模组替换）
-    public static final ResourceLocation PLAYER_HEALTH = new ResourceLocation("minecraft", "player_health");
-    public static final ResourceLocation MOUNT_HEALTH = new ResourceLocation("minecraft", "mount_health");
-    public static final ResourceLocation FOOD_LEVEL = new ResourceLocation("minecraft", "food_level");
-    public static final ResourceLocation AIR_LEVEL = new ResourceLocation("minecraft", "air_level");
-    public static final ResourceLocation ARMOR_LEVEL = new ResourceLocation("minecraft", "armor_level");
+    public static final ResourceLocation PLAYER_HEALTH = ResourceLocation.fromNamespaceAndPath("minecraft", "player_health");
+    public static final ResourceLocation MOUNT_HEALTH = ResourceLocation.fromNamespaceAndPath("minecraft", "mount_health");
+    public static final ResourceLocation FOOD_LEVEL = ResourceLocation.fromNamespaceAndPath("minecraft", "food_level");
+    public static final ResourceLocation AIR_LEVEL = ResourceLocation.fromNamespaceAndPath("minecraft", "air_level");
+    public static final ResourceLocation ARMOR_LEVEL = ResourceLocation.fromNamespaceAndPath("minecraft", "armor_level");
 
     public static <B extends BarOverlay> void registerBar(B defaults) {
         if (defaults.dependenciesMet()) {// 依赖不满足的条不注册

@@ -2,20 +2,21 @@ package tfar.classicbar.api.colorprovider;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
 import tfar.classicbar.compat.ModCompat;
 
-public record DualEffectColorProvider(MobEffect effect,
+public record DualEffectColorProvider(Holder<MobEffect> effect,
                                       Color primary, Color secondary,
                                       Color primaryUnderEffect,Color secondaryUnderEffect) implements ColorProvider {
 
     public static final MapCodec<DualEffectColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.MOB_EFFECT.byNameCodec().fieldOf("mob_effect").forGetter(DualEffectColorProvider::effect),
+            // 1.21.1 注册表 codec 返回 Holder，效果持有类型改为 Holder<MobEffect>
+            BuiltInRegistries.MOB_EFFECT.holderByNameCodec().fieldOf("mob_effect").forGetter(DualEffectColorProvider::effect),
             Color.HEX_CODEC.fieldOf("primary").forGetter(DualEffectColorProvider::primary),
             Color.HEX_CODEC.fieldOf("secondary").forGetter(DualEffectColorProvider::secondary),
             Color.HEX_CODEC.fieldOf("primary_under_effect").forGetter(DualEffectColorProvider::primaryUnderEffect),
@@ -28,7 +29,8 @@ public record DualEffectColorProvider(MobEffect effect,
 
     //use a method as otherwise it would be null
     public static DualEffectColorProvider thirst() {
-        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst"));
+        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT
+                .wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst")));
         return new DualEffectColorProvider(effect,//don't use TANEffects.THIRST here, it crashes
                 Color.hex2Color("#1C5EE4"),Color.hex2Color("#00A3E2"),Color.hex2Color("#5A891C"),Color.hex2Color("#85CF25"));
     }

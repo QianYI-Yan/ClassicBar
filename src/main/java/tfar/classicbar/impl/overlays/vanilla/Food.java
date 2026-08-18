@@ -3,6 +3,7 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodConstants;
@@ -30,12 +31,13 @@ public class Food extends FoodLikeBarOverlay {
 
   @Override
   public boolean isHealingItem(ItemStack stack, Player player) {
-    return stack.getItem().getFoodProperties() != null;
+    // 1.21.1 食物属性改为 DataComponent（组件化），不再有 Item.getFoodProperties()
+    return stack.get(DataComponents.FOOD) != null;
   }
 
   @Override
   public int getPotentialHealing(ItemStack stack, Player player) {
-    return stack.getItem().getFoodProperties().getNutrition();
+    return stack.get(DataComponents.FOOD).nutrition();
   }
 
   @Override
@@ -45,8 +47,8 @@ public class Food extends FoodLikeBarOverlay {
 
   @Override
   public float getPotentialSaturationMultiplier(ItemStack stack,Player player) {
-    FoodProperties food = stack.getItem().getFoodProperties();
-    return food.getSaturationModifier();
+    FoodProperties food = stack.get(DataComponents.FOOD);
+    return food.saturation();
   }
 
   public int getSatBarWidth(Player player) {

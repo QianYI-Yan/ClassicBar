@@ -41,10 +41,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // 配置库（可选后端，运行时按安装情况自动选择）
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:11.1.136"
+    modImplementation "me.shedaniel.cloth:cloth-config-fabric:15.0.140"
 
     // modmenu：仅编译期需要（提供配置 GUI 入口），运行时可选的
-    modCompileOnly "com.terraformersmc:modmenu:7.1.0"
+    modCompileOnly "com.terraformersmc:modmenu:11.0.4"
 }
 
 processResources {
@@ -56,11 +56,11 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = 21
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }

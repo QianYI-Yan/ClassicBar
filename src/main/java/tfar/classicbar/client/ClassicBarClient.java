@@ -40,7 +40,9 @@ public class ClassicBarClient implements ClientModInitializer {
         });
 
         ClientCommandRegistrationCallback.EVENT.register(ClassicBarClient::commands);
-        HudRenderCallback.EVENT.register(EventHandler::render);
+        // 1.21.1 的 HudRenderCallback 签名变为 (GuiGraphics, DeltaTracker)
+        HudRenderCallback.EVENT.register((graphics, deltaTracker) ->
+                EventHandler.render(graphics, deltaTracker.getGameTimeDeltaPartialTick(false)));
         PacketHandler.registerClientReceiver();
     }
 
