@@ -7,6 +7,9 @@
 - 原始模组仓库读我点妈的↓
 - [original description](#original)
 ---
+
+https://modrinth.com/mod/classicbar-fabric
+
 ## <a id="123"></a>
   这是通过deepsleep进行移植原始模组到fabric的项目的仓库
 
