@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
-import tfar.classicbar.compat.ModCompat;
 
 public record DualColorProvider(Color primary, Color secondary) implements ColorProvider{
 

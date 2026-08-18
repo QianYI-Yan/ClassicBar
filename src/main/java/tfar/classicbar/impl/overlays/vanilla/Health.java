@@ -4,10 +4,10 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarInfo;
@@ -39,7 +39,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();

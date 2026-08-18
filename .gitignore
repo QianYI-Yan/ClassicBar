@@ -24,3 +24,6 @@ classes
 
 # Files from Forge MDK
 forge*changelog.txt
+
+# 构建日志
+build.log

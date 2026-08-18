@@ -1,9 +1,9 @@
 package tfar.classicbar.impl.overlays.templates;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.Color;
 import tfar.classicbar.impl.BarInfo;
@@ -24,7 +24,7 @@ public class StackingBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
         //armor toughness stuff
         double value = barInfo.numerator().getValue(player);
         int barWidth = getBarWidth(player);

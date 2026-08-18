@@ -1,10 +1,8 @@
 package tfar.classicbar.api;
 
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.api.colorprovider.*;
-import tfar.classicbar.impl.overlays.mod.*;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.templates.SimpleBarOverlay;
 import tfar.classicbar.impl.overlays.vanilla.*;
 
 import java.util.LinkedHashMap;
@@ -12,8 +10,15 @@ import java.util.LinkedHashMap;
 public class BarRegistry {
     public static final LinkedHashMap<String, BarOverlay> REGISTRY = new LinkedHashMap<>();
 
+    // 原版 HUD 元素 ID（记录用途：对应的原版显示会被本模组替换）
+    public static final ResourceLocation PLAYER_HEALTH = new ResourceLocation("minecraft", "player_health");
+    public static final ResourceLocation MOUNT_HEALTH = new ResourceLocation("minecraft", "mount_health");
+    public static final ResourceLocation FOOD_LEVEL = new ResourceLocation("minecraft", "food_level");
+    public static final ResourceLocation AIR_LEVEL = new ResourceLocation("minecraft", "air_level");
+    public static final ResourceLocation ARMOR_LEVEL = new ResourceLocation("minecraft", "armor_level");
+
     public static <B extends BarOverlay> void registerBar(B defaults) {
-        if (defaults.dependenciesMet()) {//do not register bars that have missing dependencies
+        if (defaults.dependenciesMet()) {// 依赖不满足的条不注册
             REGISTRY.put(defaults.name(), defaults);
         }
     }
@@ -24,57 +29,29 @@ public class BarRegistry {
 
     static {
         registerBar(new Health(BarSettings.getBuilder()
-                .setDisablesOverlay(VanillaGuiOverlay.PLAYER_HEALTH.id())
+                .setDisablesOverlay(PLAYER_HEALTH)
                 .setColorProvider(TransitioningEffectColorProvider.DEFAULT).build()));
         registerBar(new MountHealth(BarSettings.getBuilder()
-                .setDisablesOverlay(VanillaGuiOverlay.MOUNT_HEALTH.id())
+                .setDisablesOverlay(MOUNT_HEALTH)
                 .setSide(BarSide.RIGHT).setColorProvider(TransitioningColorProvider.DEFAULT).build()));
         registerBar(new Food(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(DualEffectColorProvider.FOOD)
-                .setDisablesOverlay(VanillaGuiOverlay.FOOD_LEVEL.id())
+                .setDisablesOverlay(FOOD_LEVEL)
                 .build(),true,true,true));
 
-        registerBar(new ToughAsNailsThirst(BarSettings.getBuilder()
-                .setDisablesOverlay(ToughAsNailsThirst.OVERLAY_ID)
-                .setSide(BarSide.RIGHT)
-                .setColorProvider(DualEffectColorProvider.thirst())
-                .setIcon(ToughAsNailsThirst.ICONS).build(),true,true,true));
-
-        registerBar(new ThirstWasTakenThirst(BarSettings.getBuilder()
-                .setDisablesOverlay(ThirstWasTakenThirst.OVERLAY_ID)
-                .setSide(BarSide.RIGHT)
-                .setColorProvider(DualColorProvider.THIRST_WAS_TAKEN)
-                .setIcon(ThirstWasTakenThirst.THIRST_ICONS).build(),true,true,true));
-
-        registerBar(new LegendarySurvivalOverhaulThirst(BarSettings.getBuilder()
-                .setDisablesOverlay(LegendarySurvivalOverhaulThirst.OVERLAY_ID)
-                .setSide(BarSide.RIGHT)
-                .setColorProvider(DualEffectMapColorProvider.survivalOverHaulThirst())
-                .setIcon(LegendarySurvivalOverhaulThirst.ICONS).build(),true,true,true));
-
         registerBar(new Air(BarSettings.getBuilder()
-                .setDisablesOverlay(VanillaGuiOverlay.AIR_LEVEL.id())
+                .setDisablesOverlay(AIR_LEVEL)
                 .setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.hex2Color("#00E6E6")))
                 .build()));
-        registerBar(new Armor(BarSettings.getBuilder().setDisablesOverlay(VanillaGuiOverlay.ARMOR_LEVEL.id()).fitted()
+        registerBar(new Armor(BarSettings.getBuilder().setDisablesOverlay(ARMOR_LEVEL).fitted()
                 .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
                 .build()));
-        registerBar(new Absorption(BarSettings.getBuilder()//health already disables this
+        registerBar(new Absorption(BarSettings.getBuilder()// health 已禁用吸收条
                 .fitted()
                 .setColorProvider(StackingEffectColorProvider.DEFAULT_ABSORPTION).build()));
         registerBar(new ArmorToughness(BarSettings.getBuilder().setSide(BarSide.RIGHT).fitted()
                 .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
                 .setIcon(BarOverlayImpl.BAR).build()));
-        registerBar(new VampirismBlood(BarSettings.getBuilder()//.setDisablesOverlay(VampirismBlood.)nothing?
-                .setColorProvider(new SingleColorProvider(Color.RED))
-                .setSide(BarSide.RIGHT).setIcon(VampirismBlood.VAMPIRISM_ICONS).build()));
-        registerBar(SimpleBarOverlay.createFeathers(BarSettings.getBuilder()
-                        .setDisablesOverlay(SimpleBarOverlay.FEATHERS_OVERLAY_ID)
-                .setSide(BarSide.RIGHT)
-                .setColorProvider(new SingleColorProvider(Color.FEATHERS))
-                .setIcon(SimpleBarOverlay.FEATHERS_ICONS).build()));
-        registerBar(new ParcoolStaminaB(BarSettings.getBuilder().setDisablesOverlay(ParcoolStaminaB.OVERLAY_ID).setSide(BarSide.RIGHT)
-                .setColorProvider(new SingleColorProvider(Color.YELLOW)).setIcon(ParcoolStaminaB.ICONS).build()));
     }
 }

@@ -1,13 +1,13 @@
 package tfar.classicbar.impl;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.ModList;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 
 import java.util.*;
 import java.util.function.Predicate;
-//this is for common values NOT meant to be touched by end user
+// 这些是通用值，不建议最终用户修改
 public record BarInfo(String name, Set<String> dependencies, Predicate<Player> shouldRender,
                       BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator,
                       IconData icon_data) {
@@ -18,7 +18,7 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
     }
 
     public boolean checkDependencies() {
-        return dependencies.isEmpty() || dependencies.stream().allMatch(s -> ModList.get().isLoaded(s));
+        return dependencies.isEmpty() || dependencies.stream().allMatch(s -> FabricLoader.getInstance().isModLoaded(s));
     }
 
     public float getRatio(Player player) {

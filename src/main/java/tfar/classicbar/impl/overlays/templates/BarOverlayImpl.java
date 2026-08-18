@@ -3,11 +3,11 @@ package tfar.classicbar.impl.overlays.templates;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.joml.Vector2i;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.*;
@@ -71,9 +71,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public boolean render(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
         if (shouldRender(player)) {
-            gui.setupOverlayRenderState(true, false);
+            ModUtils.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, vOffset);
             renderBarDecorations(gui, graphics, player, vOffset);
             Color.reset();//don't leak colors
@@ -87,11 +87,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
         } return false;
     }
 
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
         renderSimpleBar(barSettings.colorProvider().getColor(player,barInfo.getRatio(player),0),graphics, player, vOffset);
     }
 
-    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBarDecorations(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
 
     }
 

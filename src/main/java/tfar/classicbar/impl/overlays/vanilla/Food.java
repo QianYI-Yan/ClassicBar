@@ -9,8 +9,6 @@ import net.minecraft.world.food.FoodConstants;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.compat.ModCompat;
-import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.templates.FoodLikeBarOverlay;
@@ -19,7 +17,7 @@ import tfar.classicbar.util.ModUtils;
 public class Food extends FoodLikeBarOverlay {
 
   public static final BarInfo INFO = BarInfo.createSimpleVanilla("food",
-          player -> (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player))
+          player -> true
           ,player -> player.getFoodData().getFoodLevel(),fixed(FoodConstants.MAX_FOOD));
 
   public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
@@ -32,12 +30,12 @@ public class Food extends FoodLikeBarOverlay {
 
   @Override
   public boolean isHealingItem(ItemStack stack, Player player) {
-    return stack.getFoodProperties(player) != null;
+    return stack.getItem().getFoodProperties() != null;
   }
 
   @Override
   public int getPotentialHealing(ItemStack stack, Player player) {
-    return stack.getItem().getFoodProperties(stack,player).getNutrition();
+    return stack.getItem().getFoodProperties().getNutrition();
   }
 
   @Override
@@ -47,7 +45,7 @@ public class Food extends FoodLikeBarOverlay {
 
   @Override
   public float getPotentialSaturationMultiplier(ItemStack stack,Player player) {
-    FoodProperties food = stack.getItem().getFoodProperties(stack,player);
+    FoodProperties food = stack.getItem().getFoodProperties();
     return food.getSaturationModifier();
   }
 

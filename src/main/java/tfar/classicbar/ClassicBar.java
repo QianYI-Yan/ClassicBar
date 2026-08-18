@@ -1,53 +1,26 @@
 package tfar.classicbar;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.apache.commons.lang3.tuple.Pair;
+import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import tfar.classicbar.api.BarRegistry;
 import tfar.classicbar.api.colorprovider.ColorProviderSerializers;
-import tfar.classicbar.client.ClassicBarClient;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.network.SyncHandler;
 
-@Mod(value = ClassicBar.MODID)
-public class ClassicBar {
+/**
+ * Fabric 模组主入口（双端加载）：负责服务端网络与数据同步逻辑。
+ */
+public class ClassicBar implements ModInitializer {
 
   public static final String MODID = "classicbar";
 
   public static final Logger logger = LogManager.getLogger();
 
-  public static final ClassicBarsConfig CLIENT;
-  public static final ForgeConfigSpec CLIENT_SPEC;
-
-  static {
-    final Pair<ClassicBarsConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClassicBarsConfig::new);
-    CLIENT_SPEC = specPair.getRight();
-    CLIENT = specPair.getLeft();
-  }
-
-  public ClassicBar() {
-    IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-    ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(()->"ANY", (remote, isServer)-> true));
-    ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC);
-
-    PacketHandler.registerMessages(MODID);
-    if (FMLEnvironment.dist.isClient()) {
-      ClassicBarClient.init(bus);
-
-    }
-    MinecraftForge.EVENT_BUS.addListener(SyncHandler::onLivingUpdateEvent);
-    MinecraftForge.EVENT_BUS.addListener(SyncHandler::onPlayerLoggedOut);
+  @Override
+  public void onInitialize() {
     ColorProviderSerializers.init();
+    PacketHandler.registerMessages();
+    SyncHandler.register();
   }
 
 }

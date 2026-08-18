@@ -1,44 +1,39 @@
 package tfar.classicbar.network;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import tfar.classicbar.compat.ModCompat;
-import toughasnails.api.thirst.IThirst;
-import toughasnails.api.thirst.ThirstHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Sync saturation (vanilla MC only syncs when it hits 0).
- * Sync exhaustion (vanilla MC does not sync it at all).
- * Also sync counterparts of thirst data since it's copied from the vanilla hunger system.
+ * 同步饱和度（原版 MC 只在归零时同步）与消耗度（原版 MC 完全不同步）。
  */
 public final class SyncHandler {
 
   private SyncHandler() {}
 
-  // Vanilla MC
+  // 原版 MC
   private static final Map<UUID, Float> lastSaturationLevels = new HashMap<>();
   private static final Map<UUID, Float> lastExhaustionLevels = new HashMap<>();
 
-  // Tough as Nails
-  private static final Map<UUID, Float> lastHydrationLevels = new HashMap<>();
-  private static final Map<UUID, Float> lastThirstExhaustionLevels = new HashMap<>();
+  public static void register() {
+    // Fabric 无独立的玩家 tick 事件，在服务端 tick 中遍历所有在线玩家
+    ServerTickEvents.END_SERVER_TICK.register(server -> {
+      for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+        syncVanillaData(player);
+      }
+    });
 
-  public static void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
-    if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) {
-      return;
-    }
-
-    syncVanillaData(player);
-
-    if (ModCompat.toughasnails.loaded) {
-      syncToughAsNailsData(player);
-    }
-
+    // 玩家登出时清理缓存数据
+    ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+      ServerPlayer player = handler.getPlayer();
+      if (player != null) {
+        onPlayerLoggedOut(player);
+      }
+    });
   }
 
   private static void syncVanillaData(ServerPlayer player) {
@@ -48,7 +43,7 @@ public final class SyncHandler {
 
     float saturationLevel = player.getFoodData().getSaturationLevel();
     if (lastSaturationLevel == null || lastSaturationLevel != saturationLevel) {
-      SyncState.SATURATION.sendTo(player,saturationLevel);
+      SyncState.SATURATION.sendTo(player, saturationLevel);
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
@@ -59,38 +54,9 @@ public final class SyncHandler {
     }
   }
 
-  /**
-   * Whether the mod has been loaded should be ensured via the context.
-   */
-  private static void syncToughAsNailsData(ServerPlayer player) {
-    if (!ThirstHelper.isThirstEnabled()) return;
-
+  public static void onPlayerLoggedOut(ServerPlayer player) {
     UUID uuid = player.getUUID();
-    Float lastHydrationLevel = lastHydrationLevels.get(uuid);
-    Float lastExhaustionLevel = lastThirstExhaustionLevels.get(uuid);
-
-    IThirst thirstData = ThirstHelper.getThirst(player);
-
-    float hydrationLevel = thirstData.getHydration();
-    if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
-      SyncState.HYDRATION.sendTo(player, hydrationLevel);
-      lastHydrationLevels.put(uuid, hydrationLevel);
-    }
-
-    float exhaustionLevel = thirstData.getExhaustion();
-    if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      SyncState.THIRST_EXHAUSTION.sendTo(player,exhaustionLevel);
-      lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
-    }
-  }
-
-  public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-    if (!(event.getEntity() instanceof ServerPlayer)) return;
-    UUID uuid = event.getEntity().getUUID();
-
     lastSaturationLevels.remove(uuid);
     lastExhaustionLevels.remove(uuid);
-    lastHydrationLevels.remove(uuid);
-    lastThirstExhaustionLevels.remove(uuid);
   }
 }

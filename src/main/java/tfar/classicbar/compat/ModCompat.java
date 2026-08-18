@@ -1,7 +1,7 @@
 package tfar.classicbar.compat;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
 
 public enum ModCompat {
     vampirism, feathers,legendarysurvivaloverhaul,parcool,thirst,toughasnails;
@@ -12,7 +12,7 @@ public enum ModCompat {
     }
 
     ModCompat() {
-        loaded = ModList.get().isLoaded(name());
+        loaded = FabricLoader.getInstance().isModLoaded(name());
     }
     
 }

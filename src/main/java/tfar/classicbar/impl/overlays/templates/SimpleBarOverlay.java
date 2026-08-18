@@ -1,42 +1,21 @@
 package tfar.classicbar.impl.overlays.templates;
 
-import com.elenai.feathers.api.FeathersHelper;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
-import org.joml.Vector2i;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.IconData;
 
-import java.util.List;
-
+/**
+ * 通用简单条模板（保留占位）：后续迁移第三方模组兼容时，
+ * 通过子类工厂方法创建对应的条（如羽毛条）。
+ */
 public class SimpleBarOverlay extends BarOverlayImpl {
-
 
     private Codec<? extends SimpleBarOverlay> codec;
 
-    public SimpleBarOverlay(BarSettings settings,BarInfo barInfo,Codec<? extends SimpleBarOverlay> codec) {
-        super(barInfo,settings);
+    public SimpleBarOverlay(BarSettings settings, BarInfo barInfo, Codec<? extends SimpleBarOverlay> codec) {
+        super(barInfo, settings);
         this.codec = codec;
-    }
-
-    public static final ResourceLocation FEATHERS_ICONS = new ResourceLocation("feathers", "textures/gui/icons.png");
-
-    public static final ResourceLocation FEATHERS_OVERLAY_ID = new ResourceLocation("feathers", "feathers");
-
-    public static SimpleBarOverlay createFeathers(BarSettings barSettings) {
-        BarInfo info = BarInfo.getBuilder("feathers_feathers")
-                .requireDependency(ModCompat.feathers.name())
-                .setNumerator(player -> FeathersHelper.getFeathers())
-                .setDenominator(player -> FeathersHelper.getMaxFeathers())
-                .setIconData(new IconData(List.of(new Vector2i(34,0)))).build();
-
-        Codec<? extends SimpleBarOverlay> codec = RecordCodecBuilder.create(inst ->
-                codecStart(inst).apply(inst, SimpleBarOverlay::createFeathers));
-        return new SimpleBarOverlay(barSettings, info, codec);
     }
 
     @Override

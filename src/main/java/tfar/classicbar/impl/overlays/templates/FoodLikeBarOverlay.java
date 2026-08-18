@@ -4,10 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
@@ -16,7 +16,6 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.ModUtils;
-import toughasnails.thirst.ThirstData;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.ToDoubleFunction;
@@ -53,7 +52,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
 
         float thirstLevel = barInfo.numerator().getValue(player);
         double hydrationLevel = getSaturationValue(player);
@@ -71,7 +70,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBarDecorations(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
         double maxExhaustionLevel = maxExhaustionGetter.getAsDouble();
 
         double exhaustionLevel = Math.min(exhaustionGetter.applyAsDouble(player), maxExhaustionLevel);
@@ -79,7 +78,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
         int yStart = graphics.guiHeight() - vOffset;
 
         if (showPredictedHealing) {
-            drawOverlayPrediction(graphics, player, xStart, yStart, ThirstData.DEFAULT_THIRST, 20);
+            drawOverlayPrediction(graphics, player, xStart, yStart, 20, 20);
         }
 
         if (showExhaustion && PacketHandler.presentOnServer) {
@@ -111,7 +110,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     protected void drawOverlayPrediction(GuiGraphics stack, Player player, int x, int y, double maxThirstLevel, double maxHydrationLevel) {
         ItemStack drink = player.getMainHandItem();
         if (!isHealingItem(drink, player))return;
-        double time = System.currentTimeMillis() / 1000D * ClassicBarsConfig.transitionSpeed.get();
+        double time = System.currentTimeMillis() / 1000D * ClassicBarsConfig.getTransitionSpeed();
         double drinkAlpha = Math.sin(time) / 2 + .5;
 
         float thirstLevel = barInfo.numerator().getValue(player);
