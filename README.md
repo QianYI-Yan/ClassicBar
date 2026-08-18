@@ -9,9 +9,14 @@
 ---
 ## <a id="123"></a>
   这是通过deepsleep进行移植原始模组到fabric的项目的仓库
+
   高版本没好看的条用，然后烧了20块1亿的token..........................
+
   我在玩哪个版本才会更新哪个版本的内容，目前是1.21.11
-  1.20.1我是不玩的所以理论上只有那一个release，1.21.1可能会玩所以顺带做一下fabric和neoforge，然后目前计划的是1.21.11和26.2，1.21.11只会更新fabric，26.2应该会做一个neoforge，如果[xingluo01/ClassicBar](https://github.com/xingluo01/ClassicBar)没更新的话
+
+  1.20.1我是不玩的所以理论上只有那一个release，1.21.1可能会玩所以顺带做一下fabric和neoforge，
+  
+  然后目前计划的是1.21.11和26.2，1.21.11只会更新fabric，26.2应该会做一个neoforge，如果[xingluo01/ClassicBar](https://github.com/xingluo01/ClassicBar)没更新的话
 
 
 ## <a id="cn"></a>中文版本
