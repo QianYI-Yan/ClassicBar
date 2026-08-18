@@ -23,7 +23,11 @@ public final class PacketHandler {
    * 导致饱和度/消耗度叠加层不显示。
    */
   public static void registerMessages() {
+    // 同一包类型需注册到两个方向：
+    // - playS2C：客户端接收（registerClientReceiver 使用）
+    // - playC2S：服务端能注册空接收器，使客户端 canSend 能检测到服务器已安装本模组
     PayloadTypeRegistry.playS2C().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
+    PayloadTypeRegistry.playC2S().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
     ServerPlayNetworking.registerGlobalReceiver(SyncState.S2CValueSync.TYPE, (payload, context) -> {
     });
   }

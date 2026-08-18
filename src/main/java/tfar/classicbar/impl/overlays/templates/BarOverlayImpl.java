@@ -76,7 +76,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             ModUtils.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, vOffset);
             renderBarDecorations(gui, graphics, player, vOffset);
-            Color.reset();//don't leak colors
+            Color.reset(graphics);//don't leak colors
             if (barSettings.show_text()) {
                 renderText(graphics, player, vOffset);
             }
@@ -222,7 +222,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
-        color.color2Gl();
+        color.color2Gl(matrices);
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
 
