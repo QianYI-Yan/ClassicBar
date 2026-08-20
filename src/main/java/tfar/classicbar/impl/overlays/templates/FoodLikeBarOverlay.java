@@ -1,6 +1,5 @@
 package tfar.classicbar.impl.overlays.templates;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

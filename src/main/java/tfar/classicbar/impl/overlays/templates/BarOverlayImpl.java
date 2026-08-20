@@ -87,7 +87,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
         // 每帧更新动画状态（条宽平滑 + 透明度淡入淡出）
         updateAnimation(player, shouldShow);
 
-        ModUtils.setupOverlayRenderState(true, false);
         renderBar(gui, graphics, player, vOffset);
         renderBarDecorations(gui, graphics, player, vOffset);
         if (barSettings.show_text()) {
