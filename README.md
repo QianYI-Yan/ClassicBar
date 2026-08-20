@@ -21,6 +21,9 @@ https://modrinth.com/mod/classicbar-fabric
   
   然后目前计划的是1.21.11和26.2，1.21.11只会更新fabric，26.2应该会做一个neoforge，如果[xingluo01/ClassicBar](https://github.com/xingluo01/ClassicBar)没更新的话
 
+  2026年8月20日
+  现在是推了1.21.11和26.2的，然后仓库目前和发布的release是不同的代码的，仓库的是让deepsleep整理过的，发的是没整理只做完移植就发的
+
 
 ## <a id="cn"></a>中文版本
 
