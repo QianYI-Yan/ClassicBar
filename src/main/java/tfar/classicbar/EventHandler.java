@@ -28,7 +28,7 @@ public class EventHandler {
 
   private static final List<BarOverlay> registry = new ArrayList<>();
 
-  // 布局偏移：左侧/右侧当前已堆叠的高度（原版 ForgeGui 用 leftHeight/rightHeight，mojmap 没有，这里自行管理）
+  // 布局偏移：左侧/右侧当前已堆叠的高度（原版 HUD 内部管理，被禁用后这里自行管理）
     private static int leftOffset = 39;
     private static int rightOffset = 39;
   public static void render(GuiGraphics matrices, float partialTick) {

@@ -22,7 +22,7 @@ public class ModUtils {
   }
 
   /**
-   * 设置 HUD 条渲染所需的混合/深度测试状态（原 ForgeGui.setupOverlayRenderState 的逻辑）。
+   * 设置 HUD 条渲染所需的混合/深度测试状态。
    * @param blend 是否禁用深度测试
    * @param depthTest 是否启用分离混合函数
    */
