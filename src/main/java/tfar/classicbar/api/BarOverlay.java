@@ -2,7 +2,7 @@ package tfar.classicbar.api;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
@@ -12,7 +12,7 @@ public interface BarOverlay {
 
   BarSide getSide();
 
-  boolean render(Gui gui, GuiGraphics graphics, Player player, int vOffset);
+  boolean render(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset);
 
   boolean dependenciesMet();
   Optional<Identifier> disablesOverlay();

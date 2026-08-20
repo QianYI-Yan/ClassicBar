@@ -5,7 +5,7 @@ import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import tfar.classicbar.api.BarOverlay;
@@ -52,7 +52,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
 
         float thirstLevel = barInfo.numerator().getValue(player);
         double hydrationLevel = getSaturationValue(player);
@@ -70,7 +70,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBarDecorations(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBarDecorations(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
         double maxExhaustionLevel = maxExhaustionGetter.getAsDouble();
 
         double exhaustionLevel = Math.min(exhaustionGetter.applyAsDouble(player), maxExhaustionLevel);
@@ -86,19 +86,19 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
         }
     }
 
-    protected void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
+    protected void drawThirst(GuiGraphicsExtractor stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
         double barWidth = displayedWidth;
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(getPrimaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
 
-    protected void drawHydration(GuiGraphics stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
+    protected void drawHydration(GuiGraphicsExtractor stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
         double barWidth = BarOverlayImpl.getWidth(hydrationLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(getSecondaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
 
-    protected void drawExhaustion(GuiGraphics stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
+    protected void drawExhaustion(GuiGraphicsExtractor stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
         // 1.21.11 用 blit 颜色参数半透明白色叠加
         double barWidth = BarOverlayImpl.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
@@ -107,7 +107,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
 
     public abstract boolean isHealingItem(ItemStack stack,Player player);
 
-    protected void drawOverlayPrediction(GuiGraphics stack, Player player, int x, int y, double maxThirstLevel, double maxHydrationLevel) {
+    protected void drawOverlayPrediction(GuiGraphicsExtractor stack, Player player, int x, int y, double maxThirstLevel, double maxHydrationLevel) {
         ItemStack drink = player.getMainHandItem();
         if (!isHealingItem(drink, player))return;
         double time = System.currentTimeMillis() / 1000D * ClassicBarsConfig.getTransitionSpeed();
@@ -162,7 +162,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
         //draw hunger amount

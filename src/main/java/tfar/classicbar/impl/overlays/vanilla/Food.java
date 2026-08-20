@@ -2,7 +2,7 @@ package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +60,7 @@ public class Food extends FoodLikeBarOverlay {
   }
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int vOffset) {
 
     int xStart = graphics.guiWidth() / 2 + getIconOffset();
     int yStart = graphics.guiHeight() - vOffset;

@@ -24,10 +24,11 @@ public final class PacketHandler {
    */
   public static void registerMessages() {
     // 同一包类型需注册到两个方向：
-    // - playS2C：客户端接收（registerClientReceiver 使用）
-    // - playC2S：服务端能注册空接收器，使客户端 canSend 能检测到服务器已安装本模组
-    PayloadTypeRegistry.playS2C().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
-    PayloadTypeRegistry.playC2S().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
+    // - clientboundPlay：客户端接收（registerClientReceiver 使用）
+    // - serverboundPlay：服务端能注册空接收器，使客户端 canSend 能检测到服务器已安装本模组
+    // 注：fabric 26.2 中 playS2C/playC2S 改名为 clientboundPlay/serverboundPlay
+    PayloadTypeRegistry.clientboundPlay().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
+    PayloadTypeRegistry.serverboundPlay().register(SyncState.S2CValueSync.TYPE, SyncState.S2CValueSync.STREAM_CODEC);
     ServerPlayNetworking.registerGlobalReceiver(SyncState.S2CValueSync.TYPE, (payload, context) -> {
     });
   }

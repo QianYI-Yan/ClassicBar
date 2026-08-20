@@ -3,12 +3,11 @@ package tfar.classicbar.client;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
@@ -25,7 +24,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Fabric 客户端入口：注册 HUD 渲染、客户端命令、网络接收器。
+ * Fabric 客户端入口：注册客户端命令、网络接收器。
+ * 注：HUD 渲染在 26.2 中已改为 mixin 注入 Hud.extractRenderState（fabric 的 HudRenderCallback 已移除）。
  */
 public class ClassicBarClient implements ClientModInitializer {
 
@@ -40,26 +40,23 @@ public class ClassicBarClient implements ClientModInitializer {
         });
 
         ClientCommandRegistrationCallback.EVENT.register(ClassicBarClient::commands);
-        // 1.21.1 的 HudRenderCallback 签名变为 (GuiGraphics, DeltaTracker)
-        HudRenderCallback.EVENT.register((graphics, deltaTracker) ->
-                EventHandler.render(graphics, deltaTracker.getGameTimeDeltaPartialTick(false)));
         PacketHandler.registerClientReceiver();
     }
 
     static void commands(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
-        dispatcher.register(ClientCommandManager.literal(ClassicBar.MODID)
-                .then(ClientCommandManager.literal("reload")
+        dispatcher.register(ClientCommands.literal(ClassicBar.MODID)
+                .then(ClientCommands.literal("reload")
                         .executes(c -> {
                             EventHandler.cacheConfigs();
                             return 1;
                         })
-                ).then(ClientCommandManager.literal("config")
+                ).then(ClientCommands.literal("config")
                         .executes(c -> {
-                            Minecraft.getInstance().setScreen(ClassicBarsConfig.createConfigScreen(null));
+                            Minecraft.getInstance().setScreenAndShow(ClassicBarsConfig.createConfigScreen(null));
                             return 1;
                         })
-                ).then(ClientCommandManager.literal("backend")
-                        .then(ClientCommandManager.argument("name", StringArgumentType.word())
+                ).then(ClientCommands.literal("backend")
+                        .then(ClientCommands.argument("name", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {
                                     builder.suggest("cloth-config");
                                     builder.suggest("memory");
@@ -72,7 +69,7 @@ public class ClassicBarClient implements ClientModInitializer {
                                     return 1;
                                 })
                         )
-                ).then(ClientCommandManager.literal("reset")
+                ).then(ClientCommands.literal("reset")
                         .executes(c -> {
                             Path folder = FabricLoader.getInstance().getConfigDir().resolve(ClassicBar.MODID);
                             try {

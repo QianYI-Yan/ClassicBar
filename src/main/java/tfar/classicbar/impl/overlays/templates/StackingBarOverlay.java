@@ -2,7 +2,7 @@ package tfar.classicbar.impl.overlays.templates;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.Color;
@@ -24,7 +24,7 @@ public class StackingBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
         //armor toughness stuff
         double value = barInfo.numerator().getValue(player);
         int barWidth = (int) Math.ceil(displayedWidth);
@@ -66,7 +66,7 @@ public class StackingBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
         double value = barInfo.numerator().getValue(player);

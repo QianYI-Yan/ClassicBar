@@ -2,7 +2,7 @@ package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
@@ -25,7 +25,7 @@ public class Absorption extends StackingBarOverlay {
             o -> codecStart(o).apply(o,Absorption::new));
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
 

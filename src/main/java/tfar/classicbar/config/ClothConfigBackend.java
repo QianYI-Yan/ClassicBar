@@ -364,10 +364,10 @@ public class ClothConfigBackend implements ConfigBackend {
         return object;
     }
 
-    /** 条分类名：优先使用翻译，缺失时显示原始条名 */
+    /** 条分类名：优先使用翻译，缺失时显示原始条名（26.2 中 I18n.exists 已移除，改用 get 返回值回退判断） */
     private static Component barName(String name) {
         String key = "classicbar.config.bar." + name;
-        return I18n.exists(key) ? Component.translatable(key) : Component.literal(name);
+        return !I18n.get(key).equals(key) ? Component.translatable(key) : Component.literal(name);
     }
 
     /** 记录每个条的颜色编辑状态，用于保存时判断颜色是否被修改过 */

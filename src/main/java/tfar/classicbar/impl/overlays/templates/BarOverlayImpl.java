@@ -4,7 +4,7 @@ import com.mojang.datafixers.Products;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -78,7 +78,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public boolean render(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public boolean render(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
         boolean shouldShow = shouldRender(player);
         // 淡出动画：即使不应显示，只要透明度未完全归零就继续渲染直至完全消失
         if (!shouldShow && displayedAlpha <= 0.01f) {
@@ -99,15 +99,15 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return true;
     }
 
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
         renderSimpleBar(barSettings.colorProvider().getColor(player,barInfo.getRatio(player),0),graphics, player, vOffset);
     }
 
-    public void renderBarDecorations(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
+    public void renderBarDecorations(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
 
     }
 
-    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         int text = (int)barInfo.numerator().getValue(player);
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
@@ -118,11 +118,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
         textHelper(graphics,xStart,yStart,text,color);
     }
 
-    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         renderSimpleIcon(graphics, vOffset);
     }
 
-    public void renderSimpleIcon(GuiGraphics graphics, int vOffset) {
+    public void renderSimpleIcon(GuiGraphicsExtractor graphics, int vOffset) {
         int xStart = graphics.guiWidth() / 2 + getIconOffset();
         int yStart = graphics.guiHeight() - vOffset;
 
@@ -155,15 +155,15 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
 
-    protected void renderBarBackground(GuiGraphics graphics, Player player, int vOffset) {
+    protected void renderBarBackground(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         renderBarBackground(graphics, player, vOffset,false);
     }
 
-    public void renderFlashBarBackground(GuiGraphics graphics, Player player, int vOffset) {
+    public void renderFlashBarBackground(GuiGraphicsExtractor graphics, Player player, int vOffset) {
         renderBarBackground(graphics, player, vOffset,true);
     }
 
-    protected void renderBarBackground(GuiGraphics graphics, Player player,  int vOffset,boolean flash) {
+    protected void renderBarBackground(GuiGraphicsExtractor graphics, Player player,  int vOffset,boolean flash) {
         double barWidth = displayedWidth;
         int xStart = graphics.guiWidth() / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
@@ -176,7 +176,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         } else renderFullBarBackground(graphics, xStart, yStart,flash);
     }
 
-    private void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y, boolean flash) {
+    private void drawScaledBarBackground(GuiGraphicsExtractor stack, double barWidth, int x, int y, boolean flash) {
         switch (getSide()) {
             case LEFT -> {
                 ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, flash ? 18 : 0, (int) (barWidth + 2), 9, tintedArgb(Color.WHITE));
@@ -188,7 +188,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             }
         }
     }
-    public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
+    public void textHelper(GuiGraphicsExtractor graphics,int xStart,int yStart,double stat, int color) {
         int i1 = (int) Math.floor(stat);
         int i2 = barSettings.show_icon() ? 1 : 0;
 
@@ -209,24 +209,24 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return xStart;
     }
 
-    private void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart, boolean flash) {
+    private void renderFullBarBackground(GuiGraphicsExtractor matrices, int xStart, int yStart, boolean flash) {
         renderFullBarBackground(matrices,xStart,yStart,flash
         ? 18 : 0);
     }
 
-    public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart,int vOffset) {
+    public void renderFullBarBackground(GuiGraphicsExtractor matrices, int xStart, int yStart,int vOffset) {
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, 0, vOffset, WIDTH + 4, 9, tintedArgb(Color.WHITE));
     }
 
-    public void renderFullBar(Color color,GuiGraphics matrices, int xStart, int yStart) {
+    public void renderFullBar(Color color,GuiGraphicsExtractor matrices, int xStart, int yStart) {
         renderPartialBar(color,matrices,xStart,yStart,WIDTH);
     }
 
-    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int vOffset) {
+    protected void renderSimpleBar(Color color, GuiGraphicsExtractor graphics, Player player, int vOffset) {
         renderSimpleBar(color,graphics,player,vOffset,false);
     }
 
-    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int vOffset,boolean highlight) {
+    protected void renderSimpleBar(Color color, GuiGraphicsExtractor graphics, Player player, int vOffset,boolean highlight) {
         int barWidth = (int) Math.ceil(displayedWidth);
         int xStart = getXStartBar(graphics.guiWidth(),barWidth);
         int yStart = graphics.guiHeight() - vOffset;
@@ -237,7 +237,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
     }
 
-    public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
+    public void renderPartialBar(Color color,GuiGraphicsExtractor matrices, double xStart, int yStart,double barWidth) {
         ModUtils.drawTexturedModalRect(BAR,matrices, (int) xStart, yStart, BAR_U, BAR_V, (int) barWidth, HEIGHT, tintedArgb(color));
     }
 

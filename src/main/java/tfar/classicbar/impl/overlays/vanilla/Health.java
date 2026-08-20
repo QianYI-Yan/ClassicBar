@@ -4,7 +4,7 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
@@ -38,8 +38,8 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int vOffset) {
-    int updateCounter = gui.getGuiTicks();
+  public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int vOffset) {
+    int updateCounter = gui.hud.getGuiTicks();
 
     double health = player.getHealth();
     double barWidth = displayedWidth;
@@ -99,7 +99,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int vOffset) {
     HealthEffect effect = getHealthEffect(player);
 
     int xStart = graphics.guiWidth() / 2 + getIconOffset();

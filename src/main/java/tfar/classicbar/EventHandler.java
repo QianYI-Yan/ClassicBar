@@ -7,9 +7,10 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.*;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarOverlay;
@@ -31,7 +32,7 @@ public class EventHandler {
   // 布局偏移：左侧/右侧当前已堆叠的高度（原版 ForgeGui 用 leftHeight/rightHeight，mojmap 没有，这里自行管理）
     private static int leftOffset = 39;
     private static int rightOffset = 39;
-  public static void render(GuiGraphics matrices, float partialTick) {
+  public static void render(GuiGraphicsExtractor extractor, DeltaTracker deltaTracker) {
     Minecraft mc = Minecraft.getInstance();
     Gui gui = mc.gui;
     Entity entity = mc.getCameraEntity();
@@ -45,7 +46,7 @@ public class EventHandler {
     for (BarOverlay overlay : registry) {
       BarSide side = overlay.getSide();
       try {
-        if (overlay.render(gui, matrices, player, getOffset(side))) {
+        if (overlay.render(gui, extractor, player, getOffset(side))) {
           increment(side, 10);
         }
       } catch (Throwable e) {
