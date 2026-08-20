@@ -14,7 +14,7 @@ public interface ColorProvider {
     Color getColor(Player player,float ratio, int layer);
     ColorProviderSerializer<?> getSerializer();
 
-    /** 把序列化器转为对应的 MapCodec（1.21.1 中 dispatch 的第二个参数要求返回 MapCodec） */
+    /** 把序列化器转为对应的 MapCodec（26.2 中 dispatch 的第二个参数要求返回 MapCodec） */
     static MapCodec<? extends ColorProvider> providerCodec(ColorProviderSerializer<?> serializer) {
         return serializer.codec();
     }

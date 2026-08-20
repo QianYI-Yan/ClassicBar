@@ -61,7 +61,4 @@ public record Color(int a,int r,int g,int b) {
     public int colorToText(){
         return this.a << 24 | this.r << 16 | this.g << 8 | this.b;
     }
-
-    /** 重置 GuiGraphics 着色为白色（1.21.11 无此 API，保留为常量供参考；实际颜色在 blit 时传入） */
-    public static final int WHITE_ARGB = 0xFFFFFFFF;
 }

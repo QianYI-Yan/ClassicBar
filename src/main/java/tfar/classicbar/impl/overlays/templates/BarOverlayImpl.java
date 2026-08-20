@@ -27,8 +27,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int BAR_V = 11;
     public static final Identifier BAR = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    // 1.21.1 原版已移除 textures/gui/icons.png（改用独立 sprite），
-    // 这里使用模组自带的 1.20.1 版 icons.png，保证各条 UV 坐标正确
+    // 原版已移除 textures/gui/icons.png（改用独立 sprite），
+    // 这里使用模组自带的 icons.png，保证各条 UV 坐标正确
     public static final Identifier GUI_ICONS_LOCATION = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/icons.png");
     private final BarSettings barSettings;
 
@@ -87,7 +87,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
         // 每帧更新动画状态（条宽平滑 + 透明度淡入淡出）
         updateAnimation(player, shouldShow);
 
-        ModUtils.setupOverlayRenderState(true, false);
         renderBar(gui, graphics, player, vOffset);
         renderBarDecorations(gui, graphics, player, vOffset);
         if (barSettings.show_text()) {

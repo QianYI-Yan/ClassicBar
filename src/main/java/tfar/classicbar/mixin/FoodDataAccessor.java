@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
- * 1.21.11 的 FoodData 移除了 getExhaustionLevel()/setExhaustion()，
+ * 26.2 的 FoodData 移除了 getExhaustionLevel()/setExhaustion()，
  * 这里用 accessor 访问 private 的 exhaustionLevel 字段以保留消耗度功能。
  */
 @Mixin(FoodData.class)

@@ -46,7 +46,7 @@ public class Health extends BarOverlayImpl {
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
-    // 1.21.11 中 invulnerableTime/invulnerableDuration 已移除，用 hurtTime/hurtDuration（受伤动画时间）替代
+    // 26.2 中 invulnerableTime/invulnerableDuration 已移除，用 hurtTime/hurtDuration（受伤动画时间）替代
     if (health < playerHealth && player.hurtTime > 0) {
       healthUpdateCounter = updateCounter + 20;
       lastPlayerHealth = playerHealth;
@@ -93,7 +93,7 @@ public class Health extends BarOverlayImpl {
 
     //renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
-      //draw poison overlay（1.21.11 用 blit 颜色参数半透明绿色叠加）
+      //draw poison overlay（26.2 用 blit 颜色参数半透明绿色叠加）
       ModUtils.drawTexturedModalRect(getIconRL(),graphics,(int) f + 1, yStart + 1, 1, 36, (int) barWidth, 7, tintedArgb(Color.fromRGB(0, 255, 0).withAlpha(0.5f)));
     }
   }

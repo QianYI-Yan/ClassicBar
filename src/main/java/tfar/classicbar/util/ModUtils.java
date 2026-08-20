@@ -28,11 +28,4 @@ public class ModUtils {
 
     stack.text(Minecraft.getInstance().font, string, xOffset, yOffset, color, true);
   }
-
-  /**
-   * 26.2+ GuiGraphicsExtractor 渲染自管理混合/深度状态，无需手动设置（原 Forge 逻辑的 RenderSystem/GlStateManager 已移除）。
-   */
-  public static void setupOverlayRenderState(boolean blend, boolean depthTest) {
-    // no-op：26.2 中 GuiGraphicsExtractor.blit 自动管理渲染状态
-  }
 }

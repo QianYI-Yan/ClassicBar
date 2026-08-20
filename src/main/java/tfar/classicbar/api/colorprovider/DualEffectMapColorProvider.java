@@ -21,14 +21,14 @@ public record DualEffectMapColorProvider(Color primary, Color secondary,
     public static final MapCodec<DualEffectMapColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Color.HEX_CODEC.fieldOf("primary").forGetter(DualEffectMapColorProvider::primary),
             Color.HEX_CODEC.fieldOf("secondary").forGetter(DualEffectMapColorProvider::secondary),
-            // 1.21.1 注册表 codec 返回 Holder
+            // 26.2 注册表 codec 返回 Holder
             Codec.unboundedMap(BuiltInRegistries.MOB_EFFECT.holderByNameCodec(),TwoColors.CODEC)
                     .fieldOf("mob_effects").forGetter(DualEffectMapColorProvider::effectMap)
     ).apply(instance, DualEffectMapColorProvider::new));
 
     //use a method as otherwise it would be null
     public static DualEffectMapColorProvider survivalOverHaulThirst() {
-        // 1.21.11 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
+        // 26.2 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
         Holder<MobEffect> heat_thirst = BuiltInRegistries.MOB_EFFECT
                 .get(ModCompat.legendarysurvivaloverhaul.id("heat_thirst")).orElse(null);
         Holder<MobEffect> thirst = BuiltInRegistries.MOB_EFFECT

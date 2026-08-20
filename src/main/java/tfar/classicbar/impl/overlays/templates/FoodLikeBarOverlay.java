@@ -1,6 +1,5 @@
 package tfar.classicbar.impl.overlays.templates;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -99,7 +98,7 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     protected void drawExhaustion(GuiGraphicsExtractor stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
-        // 1.21.11 用 blit 颜色参数半透明白色叠加
+        // 26.2 用 blit 颜色参数半透明白色叠加
         double barWidth = BarOverlayImpl.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         ModUtils.drawTexturedModalRect(BAR,stack,(int) barXStart + 2, y + 1, 1, 28, (int) barWidth, 9, tintedArgb(Color.WHITE.withAlpha(0.25f)));

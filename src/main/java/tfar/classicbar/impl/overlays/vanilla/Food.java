@@ -34,7 +34,7 @@ public class Food extends FoodLikeBarOverlay {
 
   @Override
   public boolean isHealingItem(ItemStack stack, Player player) {
-    // 1.21.1 食物属性改为 DataComponent（组件化），不再有 Item.getFoodProperties()
+    // 26.2 食物属性使用 DataComponent（组件化），不再有 Item.getFoodProperties()
     return stack.get(DataComponents.FOOD) != null;
   }
 

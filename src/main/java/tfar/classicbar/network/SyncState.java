@@ -16,7 +16,7 @@ public enum SyncState {
     }
 
     /**
-     * 饱和度/消耗度同步包：1.21.1 网络改用 CustomPacketPayload + StreamCodec 注册。
+     * 饱和度/消耗度同步包：26.2 网络使用 CustomPacketPayload + StreamCodec 注册。
      * 同时实现 S2CModPacket（handleClient 在客户端主线程处理）与 CustomPacketPayload。
      */
     public record S2CValueSync(float value, SyncState state) implements S2CModPacket, CustomPacketPayload {
@@ -54,7 +54,7 @@ public enum SyncState {
             if (player == null) return;
             switch (state) {
                 case SATURATION -> player.getFoodData().setSaturation(value);
-                // 1.21.11 无 setExhaustion，用 accessor 写回 exhaustionLevel
+                // 26.2 无 setExhaustion，用 accessor 写回 exhaustionLevel
                 case EXHAUSTION -> ((FoodDataAccessor) player.getFoodData()).classicbar$setExhaustionLevel(value);
             }
         }

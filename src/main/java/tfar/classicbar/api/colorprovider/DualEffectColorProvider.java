@@ -15,7 +15,7 @@ public record DualEffectColorProvider(Holder<MobEffect> effect,
                                       Color primaryUnderEffect,Color secondaryUnderEffect) implements ColorProvider {
 
     public static final MapCodec<DualEffectColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            // 1.21.1 注册表 codec 返回 Holder，效果持有类型改为 Holder<MobEffect>
+            // 26.2 注册表 codec 返回 Holder，效果持有类型为 Holder<MobEffect>
             BuiltInRegistries.MOB_EFFECT.holderByNameCodec().fieldOf("mob_effect").forGetter(DualEffectColorProvider::effect),
             Color.HEX_CODEC.fieldOf("primary").forGetter(DualEffectColorProvider::primary),
             Color.HEX_CODEC.fieldOf("secondary").forGetter(DualEffectColorProvider::secondary),
@@ -29,7 +29,7 @@ public record DualEffectColorProvider(Holder<MobEffect> effect,
 
     //use a method as otherwise it would be null
     public static DualEffectColorProvider thirst() {
-        // 1.21.11 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
+        // 26.2 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
         Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst")).orElse(null);
         return new DualEffectColorProvider(effect,//don't use TANEffects.THIRST here, it crashes
                 Color.hex2Color("#1C5EE4"),Color.hex2Color("#00A3E2"),Color.hex2Color("#5A891C"),Color.hex2Color("#85CF25"));
