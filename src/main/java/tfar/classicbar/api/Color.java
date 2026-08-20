@@ -1,9 +1,7 @@
 package tfar.classicbar.api;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 
 public record Color(int a,int r,int g,int b) {
@@ -45,22 +43,6 @@ public record Color(int a,int r,int g,int b) {
         return fromRGB(r, g, b);
     }
 
-    public void color2Gl() {
-        float r = this.r / 255f;
-        float g = this.g / 255f;
-        float b = this.b / 255f;
-        float a = this.a / 255f;
-        RenderSystem.setShaderColor(r, g, b, a);
-    }
-
-    /** 1.21.1 改用 GuiGraphics.setColor 着色（RenderSystem.setShaderColor 已废弃不生效） */
-    public void color2Gl(GuiGraphics graphics) {
-        graphics.setColor(r / 255f, g / 255f, b / 255f, a / 255f);
-    }
-    /** 1.21.1 用 GuiGraphics.setColor 着色，可附加透明度乘数（用于淡入淡出动画） */
-    public void color2Gl(GuiGraphics graphics, float alphaMultiplier) {
-        graphics.setColor(r / 255f, g / 255f, b / 255f, a / 255f * alphaMultiplier);
-    }
     public Color withAlpha(float alpha) {
         return fromRGBA(this.r, this.g, this.b, (int) (alpha * 0xff));
     }
@@ -80,12 +62,6 @@ public record Color(int a,int r,int g,int b) {
         return this.a << 24 | this.r << 16 | this.g << 8 | this.b;
     }
 
-    public static void reset() {
-        RenderSystem.setShaderColor(1,1,1,1);
-    }
-
-    /** 1.21.1 重置 GuiGraphics 着色为白色 */
-    public static void reset(GuiGraphics graphics) {
-        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-    }
+    /** 重置 GuiGraphics 着色为白色（1.21.11 无此 API，保留为常量供参考；实际颜色在 blit 时传入） */
+    public static final int WHITE_ARGB = 0xFFFFFFFF;
 }

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10.5'
+    id 'fabric-loom' version '1.17.19'
     id 'maven-publish'
 }
 
@@ -41,10 +41,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // 配置库（可选后端，运行时按安装情况自动选择）
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:15.0.140"
+    modImplementation "me.shedaniel.cloth:cloth-config-fabric:21.11.153"
 
     // modmenu：仅编译期需要（提供配置 GUI 入口），运行时可选的
-    modCompileOnly "com.terraformersmc:modmenu:11.0.4"
+    modCompileOnly "com.terraformersmc:modmenu:18.0.0"
 }
 
 processResources {
@@ -57,6 +57,11 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 21
+}
+
+// test 源里只有 Scratchpad 占位类，没有真正的测试；避免 Gradle 9 因未发现测试而失败
+tasks.withType(Test).configureEach {
+    it.failOnNoDiscoveredTests = false
 }
 
 java {

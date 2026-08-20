@@ -37,7 +37,6 @@ public class EventHandler {
     Entity entity = mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
-    mc.getProfiler().push("classicbars_hud");
 
     // 原版 bars 已被 mixin 禁用，从物品栏上方的位置（原版血条高度 39px）向上堆叠
     leftOffset = 39;
@@ -55,7 +54,6 @@ public class EventHandler {
         overlay.setErrored();
       }
     }
-    mc.getProfiler().pop();
   }
 
   public static void increment(BarSide side, int amount){

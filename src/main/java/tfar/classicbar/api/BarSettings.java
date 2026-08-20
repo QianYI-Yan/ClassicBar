@@ -3,7 +3,7 @@ package tfar.classicbar.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import tfar.classicbar.api.colorprovider.ColorProvider;
 import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
@@ -11,19 +11,19 @@ import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import java.util.Optional;
 
 //these are common settings that the player can adjust
-public record BarSettings(boolean enabled, Optional<ResourceLocation> disablesOverlay, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text,
-                          boolean show_icon, ResourceLocation icon) {
+public record BarSettings(boolean enabled, Optional<Identifier> disablesOverlay, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text,
+                          boolean show_icon, Identifier icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
                     Codec.BOOL.fieldOf("enabled").forGetter(BarSettings::enabled),
-                    ResourceLocation.CODEC.optionalFieldOf("disables_overlay").forGetter(BarSettings::disablesOverlay),
+                    Identifier.CODEC.optionalFieldOf("disables_overlay").forGetter(BarSettings::disablesOverlay),
                     BarSide.CODEC.fieldOf("side").forGetter(BarSettings::side),
                     Codec.BOOL.fieldOf("fitted").forGetter(BarSettings::fitted),
                     ColorProvider.CODEC.fieldOf("color_provider").forGetter(BarSettings::colorProvider),
                     Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
                     Codec.BOOL.fieldOf("show_icon").forGetter(BarSettings::show_icon),
-                    ResourceLocation.CODEC.fieldOf("icon")
+                    Identifier.CODEC.fieldOf("icon")
                             .forGetter(BarSettings::icon)).apply(objectInstance,BarSettings::new)
     );
 
@@ -33,20 +33,20 @@ public record BarSettings(boolean enabled, Optional<ResourceLocation> disablesOv
 
     public static class Builder {
         private boolean enabled = true;
-        private ResourceLocation disablesOverlay;
+        private Identifier disablesOverlay;
         private BarSide side = BarSide.LEFT;
         private ColorProvider colorProvider = new SingleColorProvider(Color.WHITE);
         private boolean fitted = false;
         private boolean show_text = true;
         private boolean show_icon = true;
-        private ResourceLocation icon = BarOverlayImpl.GUI_ICONS_LOCATION;
+        private Identifier icon = BarOverlayImpl.GUI_ICONS_LOCATION;
 
         public Builder setEnabled(boolean enabled) {
             this.enabled = enabled;
             return this;
         }
 
-        public Builder setDisablesOverlay(ResourceLocation disablesOverlay) {
+        public Builder setDisablesOverlay(Identifier disablesOverlay) {
             this.disablesOverlay = disablesOverlay;
             return this;
         }
@@ -71,7 +71,7 @@ public record BarSettings(boolean enabled, Optional<ResourceLocation> disablesOv
             return this;
         }
 
-        public Builder setIcon(ResourceLocation icon) {
+        public Builder setIcon(Identifier icon) {
             this.icon = icon;
             return this;
         }

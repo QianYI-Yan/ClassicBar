@@ -28,10 +28,11 @@ public record DualEffectMapColorProvider(Color primary, Color secondary,
 
     //use a method as otherwise it would be null
     public static DualEffectMapColorProvider survivalOverHaulThirst() {
+        // 1.21.11 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
         Holder<MobEffect> heat_thirst = BuiltInRegistries.MOB_EFFECT
-                .wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ModCompat.legendarysurvivaloverhaul.id("heat_thirst")));
+                .get(ModCompat.legendarysurvivaloverhaul.id("heat_thirst")).orElse(null);
         Holder<MobEffect> thirst = BuiltInRegistries.MOB_EFFECT
-                .wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ModCompat.legendarysurvivaloverhaul.id("thirst")));
+                .get(ModCompat.legendarysurvivaloverhaul.id("thirst")).orElse(null);
 
         Map<Holder<MobEffect>, TwoColors> effectMap = new HashMap<>();
 

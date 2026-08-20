@@ -1,16 +1,23 @@
 package tfar.classicbar.util;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
 public class ModUtils {
 
-  public static void drawTexturedModalRect(ResourceLocation texture,GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
-    stack.blit(texture, (int) x, y, textureX, textureY, (int) width, height);
+  /** 白色不透明（默认） */
+  public static void drawTexturedModalRect(Identifier texture, GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
+    drawTexturedModalRect(texture, stack, (int) x, y, textureX, textureY, (int) width, height, 0xFFFFFFFF);
+  }
+
+  /**
+   * 1.21.11 的 GuiGraphics 使用 RenderPipeline 渲染，颜色作为 blit 参数传入（ARGB）。
+   * 纹理 health.png / icons.png 均为 256x256。
+   */
+  public static void drawTexturedModalRect(Identifier texture, GuiGraphics stack, int x, int y, int textureX, int textureY, int width, int height, int color) {
+    stack.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, textureX, textureY, width, height, 256, 256, color);
   }
 
   public static void drawStringOnHUD(GuiGraphics stack, String string, int xOffset, int yOffset, int color) {
@@ -22,21 +29,9 @@ public class ModUtils {
   }
 
   /**
-   * 设置 HUD 条渲染所需的混合/深度测试状态（原 ForgeGui.setupOverlayRenderState 的逻辑）。
-   * @param blend 是否禁用深度测试
-   * @param depthTest 是否启用分离混合函数
+   * 1.21.11+ GuiGraphics 渲染自管理混合/深度状态，无需手动设置（原 Forge 逻辑的 RenderSystem/GlStateManager 已移除）。
    */
   public static void setupOverlayRenderState(boolean blend, boolean depthTest) {
-    RenderSystem.enableBlend();
-    RenderSystem.defaultBlendFunc();
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    RenderSystem.enableDepthTest();
-    if (blend) {
-      RenderSystem.disableDepthTest();
-    }
-    if (depthTest) {
-      RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-    }
+    // no-op：1.21.11 中 GuiGraphics.blit 自动管理渲染状态
   }
 }

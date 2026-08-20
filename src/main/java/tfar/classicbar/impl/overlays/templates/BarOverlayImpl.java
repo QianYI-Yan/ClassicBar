@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2i;
@@ -25,11 +25,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int HEIGHT = 5;
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
-    public static final ResourceLocation BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
+    public static final Identifier BAR = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
     // 1.21.1 原版已移除 textures/gui/icons.png（改用独立 sprite），
     // 这里使用模组自带的 1.20.1 版 icons.png，保证各条 UV 坐标正确
-    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/icons.png");
+    public static final Identifier GUI_ICONS_LOCATION = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/icons.png");
     private final BarSettings barSettings;
 
     protected final boolean dependenciesMet;
@@ -90,13 +90,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
         ModUtils.setupOverlayRenderState(true, false);
         renderBar(gui, graphics, player, vOffset);
         renderBarDecorations(gui, graphics, player, vOffset);
-        Color.reset(graphics);//don't leak colors
         if (barSettings.show_text()) {
             renderText(graphics, player, vOffset);
         }
         if (barSettings.show_icon()) {
-            // 图标统一用白色 + 动画透明度
-            Color.WHITE.color2Gl(graphics, displayedAlpha);
             renderIcon(graphics, player, vOffset);
         }
         return true;
@@ -131,7 +128,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
         for (int i = 0; i < barInfo.icon_data().uvs().size(); i++) {
             Vector2i uv = barInfo.icon_data().uvs().get(i);
-            ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, uv.x, uv.y, 9, 9);
+            ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, uv.x, uv.y, 9, 9, tintedArgb(Color.WHITE));
         }
     }
 
@@ -173,8 +170,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
             xStart += WIDTH - barWidth;
         }
         int yStart = graphics.guiHeight() - vOffset;
-        // 背景槽用白色 + 动画透明度
-        Color.WHITE.color2Gl(graphics, displayedAlpha);
 
         if (isFitted()) {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1,flash);
@@ -184,12 +179,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
     private void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y, boolean flash) {
         switch (getSide()) {
             case LEFT -> {
-                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, flash ? 18 : 0, (int) (barWidth + 2), 9);
-                ModUtils.drawTexturedModalRect(BAR,stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, flash ? 18 : 0, 2, 9);
+                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, flash ? 18 : 0, (int) (barWidth + 2), 9, tintedArgb(Color.WHITE));
+                ModUtils.drawTexturedModalRect(BAR,stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, flash ? 18 : 0, 2, 9, tintedArgb(Color.WHITE));
             }
             case RIGHT -> {
-                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, flash ? 18 : 0, barWidth + 2, 9);
-                ModUtils.drawTexturedModalRect(BAR,stack,x + barWidth + 2, y-1, WIDTH + 2, flash ? 18 : 0, 2, 9);
+                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, flash ? 18 : 0, (int) (barWidth + 2), 9, tintedArgb(Color.WHITE));
+                ModUtils.drawTexturedModalRect(BAR,stack,(int) (x + barWidth + 2), y-1, WIDTH + 2, flash ? 18 : 0, 2, 9, tintedArgb(Color.WHITE));
             }
         }
     }
@@ -220,7 +215,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart,int vOffset) {
-        ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, 0, vOffset, WIDTH + 4, 9);
+        ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, 0, vOffset, WIDTH + 4, 9, tintedArgb(Color.WHITE));
     }
 
     public void renderFullBar(Color color,GuiGraphics matrices, int xStart, int yStart) {
@@ -243,8 +238,14 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
-        color.color2Gl(matrices, displayedAlpha);
-        ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
+        ModUtils.drawTexturedModalRect(BAR,matrices, (int) xStart, yStart, BAR_U, BAR_V, (int) barWidth, HEIGHT, tintedArgb(color));
+    }
+
+    /** 将颜色转为 ARGB 并应用当前淡入淡出透明度 */
+    protected int tintedArgb(Color color) {
+        int argb = color.colorToText();
+        int alpha = (int) (((argb >>> 24) & 0xFF) * displayedAlpha);
+        return (alpha << 24) | (argb & 0xFFFFFF);
     }
 
     /** 每帧更新条宽平滑过渡与透明度淡入淡出 */
@@ -269,7 +270,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return 1 - Math.exp(-ClassicBarsConfig.getTransitionSpeed() * 0.1);
     }
 
-    public ResourceLocation getIconRL() {
+    public Identifier getIconRL() {
         return barSettings.icon();
     }
 
@@ -313,7 +314,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public final Optional<ResourceLocation> disablesOverlay() {
+    public final Optional<Identifier> disablesOverlay() {
         return barSettings.disablesOverlay();
     }
 }

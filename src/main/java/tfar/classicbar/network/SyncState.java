@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.client.ClassicBarClient;
+import tfar.classicbar.mixin.FoodDataAccessor;
 
 public enum SyncState {
     SATURATION, EXHAUSTION;
@@ -53,7 +54,8 @@ public enum SyncState {
             if (player == null) return;
             switch (state) {
                 case SATURATION -> player.getFoodData().setSaturation(value);
-                case EXHAUSTION -> player.getFoodData().setExhaustion(value);
+                // 1.21.11 无 setExhaustion，用 accessor 写回 exhaustionLevel
+                case EXHAUSTION -> ((FoodDataAccessor) player.getFoodData()).classicbar$setExhaustionLevel(value);
             }
         }
     }

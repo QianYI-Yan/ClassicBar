@@ -3,6 +3,7 @@ package tfar.classicbar.network;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.level.ServerPlayer;
+import tfar.classicbar.mixin.FoodDataAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ public final class SyncHandler {
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
-    float exhaustionLevel = player.getFoodData().getExhaustionLevel();
+    float exhaustionLevel = ((FoodDataAccessor) player.getFoodData()).classicbar$getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
       SyncState.EXHAUSTION.sendTo(player, exhaustionLevel);
       lastExhaustionLevels.put(uuid, exhaustionLevel);

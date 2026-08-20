@@ -13,6 +13,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.templates.FoodLikeBarOverlay;
+import tfar.classicbar.mixin.FoodDataAccessor;
 import tfar.classicbar.util.ModUtils;
 
 public class Food extends FoodLikeBarOverlay {
@@ -22,7 +23,9 @@ public class Food extends FoodLikeBarOverlay {
           ,player -> player.getFoodData().getFoodLevel(),fixed(FoodConstants.MAX_FOOD));
 
   public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
-    super(INFO, CODEC,() -> FoodConstants.EXHAUSTION_DROP,p -> p.getFoodData().getExhaustionLevel(), barSettings, showSaturation, showExhaustion, showHeldFood);
+    super(INFO, CODEC,() -> FoodConstants.EXHAUSTION_DROP,
+            p -> ((FoodDataAccessor) p.getFoodData()).classicbar$getExhaustionLevel(),
+            barSettings, showSaturation, showExhaustion, showHeldFood);
   }
 
   public static final Codec<Food> CODEC = RecordCodecBuilder.create(

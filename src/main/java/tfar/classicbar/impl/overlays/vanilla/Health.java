@@ -1,7 +1,6 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Gui;
@@ -47,15 +46,16 @@ public class Health extends BarOverlayImpl {
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
-    if (health < playerHealth && player.invulnerableTime > 0) {
+    // 1.21.11 中 invulnerableTime/invulnerableDuration 已移除，用 hurtTime/hurtDuration（受伤动画时间）替代
+    if (health < playerHealth && player.hurtTime > 0) {
       healthUpdateCounter = updateCounter + 20;
       lastPlayerHealth = playerHealth;
-    } else if (health > playerHealth && player.invulnerableTime > 0) {
+    } else if (health > playerHealth && player.hurtTime > 0) {
       healthUpdateCounter = updateCounter + 10;
       /* lastPlayerHealth = playerHealth;*/
     }
     playerHealth = health;
-    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / player.invulnerableDuration);
+    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtTime / player.hurtDuration);
 
     int xStart = graphics.guiWidth() / 2 + getHOffset();
     int yStart = graphics.guiHeight() - vOffset;
@@ -93,9 +93,8 @@ public class Health extends BarOverlayImpl {
 
     //renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
-      //draw poison overlay
-      RenderSystem.setShaderColor(0, .5f, 0, .5f);
-      ModUtils.drawTexturedModalRect(getIconRL(),graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
+      //draw poison overlay（1.21.11 用 blit 颜色参数半透明绿色叠加）
+      ModUtils.drawTexturedModalRect(getIconRL(),graphics,(int) f + 1, yStart + 1, 1, 36, (int) barWidth, 7, tintedArgb(Color.fromRGB(0, 255, 0).withAlpha(0.5f)));
     }
   }
 

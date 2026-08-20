@@ -2,6 +2,9 @@
   "required": true,
   "package": "tfar.classicbar.mixin",
   "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "FoodDataAccessor"
+  ],
   "client": [
     "GuiMixin"
   ],

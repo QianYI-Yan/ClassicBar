@@ -4,13 +4,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import tfar.classicbar.ClassicBar;
 
 public final class PacketHandler {
 
-  public static final ResourceLocation SYNC_ID = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "s2c_sync");
+  public static final Identifier SYNC_ID = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "s2c_sync");
 
   /** 服务器是否安装本模组（客户端在登录时通过 canSend 检测） */
   public static boolean presentOnServer;

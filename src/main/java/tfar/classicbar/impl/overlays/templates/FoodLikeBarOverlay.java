@@ -99,10 +99,10 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     protected void drawExhaustion(GuiGraphics stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
-        RenderSystem.setShaderColor(1, 1, 1, .25f);
+        // 1.21.11 用 blit 颜色参数半透明白色叠加
         double barWidth = BarOverlayImpl.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-        ModUtils.drawTexturedModalRect(BAR,stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
+        ModUtils.drawTexturedModalRect(BAR,stack,(int) barXStart + 2, y + 1, 1, 28, (int) barWidth, 9, tintedArgb(Color.WHITE.withAlpha(0.25f)));
     }
 
     public abstract boolean isHealingItem(ItemStack stack,Player player);

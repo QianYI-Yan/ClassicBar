@@ -29,8 +29,8 @@ public record DualEffectColorProvider(Holder<MobEffect> effect,
 
     //use a method as otherwise it would be null
     public static DualEffectColorProvider thirst() {
-        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT
-                .wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst")));
+        // 1.21.11 中 Registry.get 返回 Optional<Holder.Reference<MobEffect>>
+        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst")).orElse(null);
         return new DualEffectColorProvider(effect,//don't use TANEffects.THIRST here, it crashes
                 Color.hex2Color("#1C5EE4"),Color.hex2Color("#00A3E2"),Color.hex2Color("#5A891C"),Color.hex2Color("#85CF25"));
     }
