@@ -271,13 +271,18 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     /** 动画速度系数：基于 transition_speed 配置（值越大动画越快）。
-     *  当 transition_speed <= 0 时返回 0，表示禁用动画（避免淡出卡在中间导致条一直显示）。 */
+     *  关键：当 transition_speed 为 0 时禁用动画（立即显示/隐藏）；
+     *  当为极小正数时也需保证淡出不至于过慢——否则 alpha 每帧几乎不衰减，
+     *  条件不满足的条会"始终显示"（看起来像 bug）。
+     *  这里强制动画系数 ≥ MIN_FACTOR，保证淡出最多约 0.5 秒内完成（否则透明度永远降不到 0）。 */
+    private static final double MIN_ANIMATION_FACTOR = 1 - Math.exp(-0.5); // ≈ 0.393，约 0.5 秒内完成淡出
+
     private static double animationFactor() {
         double speed = ClassicBarsConfig.getTransitionSpeed();
         if (speed <= 0) {
-            return 0;
+            return 0; // 禁用动画
         }
-        return 1 - Math.exp(-speed * 0.1);
+        return Math.max(1 - Math.exp(-speed * 0.1), MIN_ANIMATION_FACTOR);
     }
 
     public ResourceLocation getIconRL() {
