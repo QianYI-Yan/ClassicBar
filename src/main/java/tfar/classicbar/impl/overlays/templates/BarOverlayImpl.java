@@ -249,6 +249,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     /** 每帧更新条宽平滑过渡与透明度淡入淡出 */
     private void updateAnimation(Player player, boolean shouldShow) {
+        // transition_speed <= 0 表示禁用动画：直接跳到目标状态（立即显示/隐藏，不产生卡住问题）
+        if (animationFactor() <= 0) {
+            displayedWidth = getBarWidth(player);
+            displayedAlpha = shouldShow ? 1.0f : 0.0f;
+            return;
+        }
         double target = getBarWidth(player);
         if (displayedWidth < 0) {
             displayedWidth = target;
@@ -264,9 +270,14 @@ public abstract class BarOverlayImpl implements BarOverlay {
         if (displayedAlpha > 0.99f) displayedAlpha = 1.0f;
     }
 
-    /** 动画速度系数：基于 transition_speed 配置（值越大动画越快） */
+    /** 动画速度系数：基于 transition_speed 配置（值越大动画越快）。
+     *  当 transition_speed <= 0 时返回 0，表示禁用动画（避免淡出卡在中间导致条一直显示）。 */
     private static double animationFactor() {
-        return 1 - Math.exp(-ClassicBarsConfig.getTransitionSpeed() * 0.1);
+        double speed = ClassicBarsConfig.getTransitionSpeed();
+        if (speed <= 0) {
+            return 0;
+        }
+        return 1 - Math.exp(-speed * 0.1);
     }
 
     public Identifier getIconRL() {
