@@ -120,6 +120,8 @@ public class ClothConfigBackend implements ConfigBackend {
         general.addEntry(entryBuilder.startDoubleField(
                         Component.translatable("classicbar.config.transition_speed"), data.transition_speed)
                 .setDefaultValue(3.0)
+                // 下限 0.5：避免极小值导致动画系数趋近 0，条件不满足的条会因淡出过慢而"始终显示"
+                .setMin(0.5)
                 .setTooltip(Component.translatable("classicbar.config.transition_speed.tooltip"))
                 .setSaveConsumer(value -> data.transition_speed = value)
                 .build());
